@@ -1,4 +1,4 @@
-import pymongo
+from pymongo import MongoClient
 from database.entities import Message
 
 class MongoHandler:
