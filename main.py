@@ -24,7 +24,7 @@ assert cipher.decrypt(encrypted) == message
 
 handler = MongoHandler()
 
-def menu():
+def menu(email):
         while True:
                 print("\nMenu de Opções:")
                 print("1. Ler email")
@@ -34,9 +34,9 @@ def menu():
                 opcao = input("Escolha uma opção (1-3): ")
 
                 if opcao == '1':
-                        read_email()
+                        read_email(email)
                 elif opcao == '2':
-                        send_email()
+                        send_email(email)
                 elif opcao == '3':
                         print("Saindo...")
                         break
@@ -45,11 +45,11 @@ def menu():
 
 
 def read_email(email):
-        handler.getMessages(email)
+        handler.get_messages(email)
         print("Lendo emails...")
 
 
-def send_email():
+def send_email(email):
         print("Enviando email...")
 
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                 email = input("Insira seu email: ")
                 password = input("Insira sua senha: ")
 
-                auth = handler.authenticate("naah.sumida@gmail.com", "chatpy123")
+                auth = handler.authenticate(email, password)
                 if auth == True:
                         break
                 print(auth)

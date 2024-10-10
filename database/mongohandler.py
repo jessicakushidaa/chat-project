@@ -1,3 +1,5 @@
+from typing import List, Type
+
 from numpy.ma.core import append
 from pymongo import MongoClient
 from database.entities import Message
@@ -18,17 +20,15 @@ class MongoHandler:
             return False
 
 
-
-    def getMessages (self, email) -> []:
+# nao estamos usando a classe Message?
+    def get_messages (self, email) -> List[Message]:
         db = self.connect("chat-python")
         response = []
-        messages = db.messages.find_one({"sender": email})
+        messages = db.messages.find({"receiver": email})
         if len(messages) > 0:
             for message in messages:
-                response.append(message)
-                return response
-        else:
-            return []
+                response.append(Message(sender=message["sender"],content=message["content"]))
+        return response
 
 
 

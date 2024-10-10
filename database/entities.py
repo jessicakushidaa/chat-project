@@ -5,8 +5,8 @@ class User:
         self.password = password
 
 class Message:
-    def __init__(self, sender:str, recipient:str, content:str):
+    def __init__(self, sender:str, receiver:str, content:str):
         self.sender = sender
-        self.recipient = recipient
+        self.receiver = receiver
         self.content = content
 
