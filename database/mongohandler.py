@@ -2,7 +2,8 @@ from typing import List, Type
 
 from numpy.ma.core import append
 from pymongo import MongoClient
-from database.entities import Message
+from database.entities import Message, User
+
 
 class MongoHandler:
     def __init__(self):
@@ -11,9 +12,9 @@ class MongoHandler:
     def connect(self, database_name):
         return self.client[database_name]
 
-    def authenticate (self, email, password) -> bool:
+    def authenticate (self, user:User) -> bool:
         db = self.connect("chat-python")
-        user = db.users.find_one({"email": email, "password": password})
+        user = db.users.find_one({"email": user.email, "password": user.password})
         if user:
             return True
         else:
@@ -28,9 +29,9 @@ class MongoHandler:
             response.append(Message(sender=message["sender"],receiver= message["receiver"], content=message["content"]))
         return response
 
-    def insert_message (self, sender: str, receiver: str, content: str) -> bool:
+    def insert_message (self, message: Message) -> bool:
         db = self.connect("chat-python")
-        message = Message(sender=sender,receiver=receiver, content=content)
+        message = Message(sender=message.sender,receiver=message.receiver, content=message.content)
         message_id = db.messages.insert_one({
           "sender": message.sender,
           "receiver": message.receiver,
