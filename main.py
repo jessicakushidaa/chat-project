@@ -7,29 +7,19 @@ from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
 key = "@NcRfUjXn2r5u8x/"
 output_format = "b64"
 iv_parameter = "0011223344556677"
-message = "Hello World"
-
 cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
-encrypted = cipher.encrypt(message)
-assert encrypted == "MhL/V78kC3rcYlnlPg1L4g=="
-assert cipher.decrypt(encrypted) == message
-
-# hex
-output_format = "hex"
-cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
-encrypted = cipher.encrypt(message)
-assert encrypted == "3212ff57bf240b7adc6259e53e0d4be2"
-assert cipher.decrypt(encrypted) == message
-# comeca aqui: termina aqui
 
 handler = MongoHandler()
 
 def menu(email):
         while True:
-                print("\nMenu de Opções:")
+                print("\n" + "=" * 40)
+                print("         MENU DE OPÇÕES")
+                print("=" * 40)
                 print("1. Ler email")
                 print("2. Enviar email")
                 print("3. Sair")
+                print("=" * 40)
 
                 opcao = input("Escolha uma opção (1-3): ")
 
@@ -45,12 +35,20 @@ def menu(email):
 
 
 def read_email(email):
-        handler.get_messages(email)
-        print("Lendo emails...")
+        messages = handler.get_messages(email)
+        for message in messages:
+                content = message.content
+                content = cipher.decrypt(content)
+                print(content)
 
 
 def send_email(email):
-        print("Enviando email...")
+        receiver = input("Destinatário: ")
+        content = input("Mensagem: ")
+        content = cipher.encrypt(content)
+        messageID = handler.insert_message(email, receiver, content)
+        if messageID == True:
+                print("Email enviado com sucesso...")
 
 
 if __name__ == '__main__':

@@ -20,15 +20,24 @@ class MongoHandler:
             return False
 
 
-# nao estamos usando a classe Message?
     def get_messages (self, email) -> List[Message]:
         db = self.connect("chat-python")
         response = []
         messages = db.messages.find({"receiver": email})
-        if len(messages) > 0:
-            for message in messages:
-                response.append(Message(sender=message["sender"],content=message["content"]))
+        for message in messages:
+            response.append(Message(sender=message["sender"],receiver= message["receiver"], content=message["content"]))
         return response
 
+    def insert_message (self, sender: str, receiver: str, content: str) -> bool:
+        db = self.connect("chat-python")
+        message = Message(sender=sender,receiver=receiver, content=content)
+        message_id = db.messages.insert_one({
+          "sender": message.sender,
+          "receiver": message.receiver,
+          "content": message.content
+        }).inserted_id
+        if message_id: return True
+
+        return False
 
 
